@@ -1,0 +1,44 @@
+# Ignore version control directories
+.git/
+.gitignore
+
+# Ignore IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Ignore build outputs
+target/
+*.class
+
+# Ignore environment and secret files
+.env*
+*.pem
+*.key
+*.crt
+
+# Ignore temporary and local files
+tmp/
+temp/
+*.tmp
+.local/
+
+# Ignore documentation and auxiliary files
+docs/
+*.md
+README*
+
+# Ignore Docker-related files
+Dockerfile*
+docker-compose*
+
+# Ignore test and debug files
+test/
+tests/
+*.log
+
+# Ensure necessary files are included
+!src/main/java/**
+!application.properties
+!pom.xml
