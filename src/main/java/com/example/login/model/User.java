@@ -10,17 +10,24 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
+    private String email;
 
     private String password;
 
     private Date date_created;
 
+    private boolean enabled = false;
+
     // Constructors
     public User() {}
-    public User(String username, String password) {
-        this.username = username;
+    public User(String email, String password) {
+        this.email = email;
         this.password = password;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.date_created = new Date(System.currentTimeMillis());
     }
 
     // Getters & Setters
@@ -32,12 +39,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -54,5 +61,13 @@ public class User {
 
     public void setDate_created(Date date_created) {
         this.date_created = date_created;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }
