@@ -18,7 +18,7 @@ public class EmailService {
         String body = "Click the link to verify your email: " + url;
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(user.getEmail()); // assuming username is the email
+        message.setTo(user.getEmail());
         message.setSubject(subject);
         message.setText(body);
         mailSender.send(message);
