@@ -8,13 +8,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class LoginApplication {
 
     public static void main(String[] args) {
-        // Load .env
-        Dotenv dotenv = Dotenv.configure().load();
+        try {
+            Dotenv dotenv = Dotenv.configure()
+                .directory("./") // defaults to root directory
+                .ignoreIfMissing() // prevents crash in production if .env is missing
+                .load();
 
-        // Set env vars so Spring can read them
-        System.setProperty("DB_URL", dotenv.get("DB_URL"));
-        System.setProperty("DB_USERNAME", dotenv.get("DB_USERNAME"));
-        System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
+            System.setProperty("DB_URL", dotenv.get("DB_URL"));
+            System.setProperty("DB_USERNAME", dotenv.get("DB_USERNAME"));
+            System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
+        } catch (Exception e) {
+            System.out.println("No .env file found or failed to load. Using system environment variables.");
+        }
 
         SpringApplication.run(LoginApplication.class, args);
     }
