@@ -4,6 +4,7 @@ import com.example.login.model.User;
 import com.example.login.model.VerificationToken;
 import com.example.login.repository.UserRepository;
 import com.example.login.repository.VerificationTokenRepository;
+import com.example.login.service.EmailService;
 
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
