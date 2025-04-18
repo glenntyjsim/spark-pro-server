@@ -1,25 +1,21 @@
 package com.example.login;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import io.github.cdimascio.dotenv.Dotenv;
 
 @SpringBootApplication
 public class LoginApplication {
-
     public static void main(String[] args) {
-        try {
-            Dotenv dotenv = Dotenv.configure()
-                .directory("./") // defaults to root directory
-                .ignoreIfMissing() // prevents crash in production if .env is missing
+        // Load .env
+        Dotenv dotenv = Dotenv.configure()
+                .ignoreIfMissing() // for deployment (Render)
                 .load();
 
-            System.setProperty("DB_URL", dotenv.get("DB_URL"));
-            System.setProperty("DB_USERNAME", dotenv.get("DB_USERNAME"));
-            System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
-        } catch (Exception e) {
-            System.out.println("No .env file found or failed to load. Using system environment variables.");
-        }
+        // Map .env values to System properties Spring Boot expects
+        System.setProperty("spring.datasource.url", dotenv.get("DB_URL"));
+        System.setProperty("spring.datasource.username", dotenv.get("DB_USERNAME"));
+        System.setProperty("spring.datasource.password", dotenv.get("DB_PASSWORD"));
 
         SpringApplication.run(LoginApplication.class, args);
     }
