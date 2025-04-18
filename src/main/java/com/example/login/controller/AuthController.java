@@ -1,46 +1,46 @@
 package com.example.login.controller;
 
 import com.example.login.model.User;
+import com.example.login.repository.UserRepository;
 import org.springframework.http.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
-// @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class AuthController {
 
-    // Thread-safe in-memory user store
-    private static final Map<String, String> users = new ConcurrentHashMap<>();
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    static {
-        users.put("admin", "admin123"); // default user
+    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody User newUser) {
-        if (newUser.getUsername() == null || newUser.getPassword() == null) {
-            return ResponseEntity.badRequest().body("Username and password must not be null.");
-        }
-
-        if (users.containsKey(newUser.getUsername())) {
+        if (userRepository.findByUsername(newUser.getUsername()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists.");
         }
 
-        users.put(newUser.getUsername(), newUser.getPassword());
+        // Hash the password before saving
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        userRepository.save(newUser);
         return ResponseEntity.ok("Registration successful!");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User requestUser) {
-        String storedPassword = users.get(requestUser.getUsername());
+    public ResponseEntity<String> login(@RequestBody User user) {
+        Optional<User> found = userRepository.findByUsername(user.getUsername());
 
-        if (storedPassword != null && storedPassword.equals(requestUser.getPassword())) {
+        // Check if user exists and password matches
+        if (found.isPresent() && passwordEncoder.matches(user.getPassword(), found.get().getPassword())) {
             return ResponseEntity.ok("Login successful!");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials.");
         }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials.");
     }
 }
