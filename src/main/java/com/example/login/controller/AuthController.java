@@ -46,7 +46,7 @@ public class AuthController {
         VerificationToken verificationToken = new VerificationToken(token, savedUser, LocalDateTime.now().plusMinutes(30));
         tokenRepository.save(verificationToken);
 
-        emailService.sendVerificationEmail(savedUser, token, "https://spark-pro-main.onrender.com/");
+        emailService.sendVerificationEmail(savedUser, token, "https://spark-pro-main.onrender.com");
 
         return ResponseEntity.ok("Please check your email to verify your account.");
     }
