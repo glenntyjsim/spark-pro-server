@@ -2,6 +2,7 @@ package com.example.login.controller;
 
 import com.example.login.model.User;
 import com.example.login.model.VerificationToken;
+import com.example.login.model.ResetPassword;
 import com.example.login.repository.UserRepository;
 import com.example.login.repository.VerificationTokenRepository;
 import com.example.login.service.EmailService;
@@ -10,6 +11,7 @@ import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -47,6 +49,7 @@ public class AuthController {
         tokenRepository.save(verificationToken);
 
         emailService.sendVerificationEmail(savedUser, token, "https://spark-pro-main.onrender.com");
+        // emailService.sendVerificationEmail(savedUser, token, "https://localhost:8080");
 
         return ResponseEntity.ok("Please check your email to verify your account.");
     }
@@ -84,4 +87,37 @@ public class AuthController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials.");
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody User user) {
+        Optional<User> foundOpt = userRepository.findByEmail(user.getEmail());
+
+        if (foundOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email not registered.");
+        }
+
+        User foundUser = foundOpt.get();
+
+        String newPassword = generateRandomPassword(10);
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        foundUser.setPassword(encodedPassword);
+        userRepository.save(foundUser);
+
+        emailService.sendNewPasswordEmail(foundUser, newPassword);
+
+        return ResponseEntity.ok("A new password has been sent to your email.");
+    }
+
+    private String generateRandomPassword(int length) {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*";
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder();
+
+        for (int i = 0; i < length; i++) {
+            password.append(chars.charAt(random.nextInt(chars.length())));
+        }
+
+        return password.toString();
+    }
+
 }
