@@ -1,18 +1,22 @@
 package com.example.login.controller;
 
+import com.example.login.config.JwtUtil;
 import com.example.login.model.User;
 import com.example.login.model.VerificationToken;
-import com.example.login.model.ResetPassword;
 import com.example.login.repository.UserRepository;
 import com.example.login.repository.VerificationTokenRepository;
 import com.example.login.service.EmailService;
 
-import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,6 +28,9 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final VerificationTokenRepository tokenRepository;
     private final EmailService emailService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder,
                         VerificationTokenRepository tokenRepository,
@@ -49,7 +56,7 @@ public class AuthController {
         tokenRepository.save(verificationToken);
 
         emailService.sendVerificationEmail(savedUser, token, "https://spark-pro-main.onrender.com");
-        // emailService.sendVerificationEmail(savedUser, token, "https://localhost:8080");
+        // emailService.sendVerificationEmail(savedUser, token, "http://localhost:8080");
 
         return ResponseEntity.ok("Please check your email to verify your account.");
     }
@@ -71,9 +78,8 @@ public class AuthController {
         return ResponseEntity.ok("Email verified successfully!");
     }
 
-
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) {
+    public ResponseEntity<?> login(@RequestBody User user) {
         Optional<User> found = userRepository.findByEmail(user.getEmail());
         if (found.isPresent()) {
             User existingUser = found.get();
@@ -83,7 +89,14 @@ public class AuthController {
             if (!existingUser.isEnabled()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please verify your email first.");
             }
-            return ResponseEntity.ok("Login successful!");
+            String token = jwtUtil.generateToken(existingUser.getEmail());
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Login successful");
+            response.put("userId", existingUser.getId());
+            response.put("token", token);
+            
+            return ResponseEntity.ok(response);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials.");
     }
@@ -98,7 +111,7 @@ public class AuthController {
 
         User foundUser = foundOpt.get();
 
-        String newPassword = generateRandomPassword(10);
+        String newPassword = generateRandomPassword(6);
         String encodedPassword = passwordEncoder.encode(newPassword);
         foundUser.setPassword(encodedPassword);
         userRepository.save(foundUser);
