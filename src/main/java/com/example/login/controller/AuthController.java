@@ -101,6 +101,7 @@ public class AuthController {
             response.put("token", token);
             response.put("userId", existingUser.getId());
             response.put("userEmail", existingUser.getEmail());
+            response.put("userRole", existingUser.getRole());
             return ResponseEntity.ok(response);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials.");
