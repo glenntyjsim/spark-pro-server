@@ -10,28 +10,29 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String email;
-
     private String password;
-
-    private String name; // New field for user's name
-    private String phone; // New field for user's phone number
-    private String address; // New field for user's address
-
+    private String name;
+    private String phone;
+    private String address;
     private Date date_created;
-
-    private boolean enabled = false;
+    private boolean enabled;
+    private String role;
+    private boolean status;
 
     // Constructors
     public User() {}
 
-    public User(String email, String password, String name, String phone, String address) {
+    public User(String email, String password, String name, String phone, String address, Date date_created, boolean enabled, String role, boolean status) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.phone = phone;
         this.address = address;
+        this.date_created = date_created;
+        this.enabled = enabled;
+        this.role = role;
+        this.status = status;
     }
 
     @PrePersist
@@ -102,5 +103,21 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getRole() {
+        return role;
+    }
+    
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

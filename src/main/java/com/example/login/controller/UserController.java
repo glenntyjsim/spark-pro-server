@@ -1,7 +1,6 @@
 package com.example.login.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -29,11 +28,6 @@ public class UserController {
      public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-    }
-
-    @GetMapping("/get-all-users")
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
     }
 
     @GetMapping("/get-user/{email}")

@@ -36,4 +36,15 @@ public class EmailService {
         message.setText(body);
         mailSender.send(message);
     }
+
+    public void sendContactEmail(String name, String email, String message) {
+        String subject = "New Contact Message from " + name;
+        String body = "You have received a new message from: " + name + "\nEmail: " + email + "\n\nMessage:\n" + message;
+
+        SimpleMailMessage contactMessage = new SimpleMailMessage();
+        contactMessage.setTo("sparkpromailer@gmail.com");
+        contactMessage.setSubject(subject);
+        contactMessage.setText(body);
+        mailSender.send(contactMessage);
+    }
 }

@@ -48,7 +48,9 @@ public class AuthController {
         }
 
         newUser.setEnabled(false);
+        newUser.setStatus(true);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        newUser.setRole("User");
         User savedUser = userRepository.save(newUser);
 
         String token = UUID.randomUUID().toString();
@@ -89,6 +91,10 @@ public class AuthController {
             if (!existingUser.isEnabled()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please verify your email first.");
             }
+            if (!existingUser.getStatus()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your account has been disabled. Please contact the administrator.");
+            }
+
             String token = jwtUtil.generateToken(existingUser.getEmail());
             
             Map<String, Object> response = new HashMap<>();
