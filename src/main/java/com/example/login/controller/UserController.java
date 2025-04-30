@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.login.model.User;
 import com.example.login.repository.UserRepository;
 
+import jakarta.persistence.criteria.CriteriaBuilder.In;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -52,11 +54,15 @@ public class UserController {
     }
 
     @PutMapping("/update-user")
-    public ResponseEntity<?> updateUserDetail(@RequestBody Map<String, String> payload) {
-        String email = payload.get("email"); // identify user by email
-        String name = payload.get("name");
-        String phone = payload.get("phone");
-        String address = payload.get("address");
+    public ResponseEntity<?> updateUserDetail(@RequestBody Map<String, Object> payload) {
+        String email = (String) payload.get("email"); // identify user by email
+        String name = (String) payload.get("name");
+        String phone = (String) payload.get("phone");
+        String address = (String) payload.get("address");
+        String bio = (String) payload.get("bio");
+        String profilePhoto = (String) payload.get("profilePhoto");
+        Integer experienceYear = (Integer) payload.get("experienceYear");
+        String preferredRegion = (String) payload.get("preferredRegion");
 
         Optional<User> userOptional = userRepository.findByEmail(email);
 
@@ -65,6 +71,10 @@ public class UserController {
             user.setName(name);
             user.setPhone(phone);
             user.setAddress(address);
+            user.setBio(bio);
+            user.setProfilePhoto(profilePhoto);
+            user.setExperienceYear(experienceYear);
+            user.setPreferredRegion(preferredRegion);
             userRepository.save(user);
 
             return ResponseEntity.ok("User updated successfully");
