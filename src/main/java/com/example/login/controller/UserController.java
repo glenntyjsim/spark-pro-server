@@ -41,6 +41,10 @@ public class UserController {
             userData.put("email", user.getEmail());
             userData.put("phone", user.getPhone());
             userData.put("address", user.getAddress());
+            userData.put("bio", user.getBio());
+            userData.put("profile_photo", user.getProfilePhoto());
+            userData.put("experience_year", user.getExperienceYear());
+            userData.put("preferred_region", user.getPreferredRegion());
             return ResponseEntity.ok(userData);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");

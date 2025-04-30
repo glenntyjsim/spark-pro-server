@@ -15,6 +15,10 @@ public class User {
     private String name;
     private String phone;
     private String address;
+    private String bio;
+    private String profile_photo;
+    private Integer experience_year;
+    private String preferred_region;
     private Date date_created;
     private boolean enabled;
     private String role;
@@ -23,12 +27,17 @@ public class User {
     // Constructors
     public User() {}
 
-    public User(String email, String password, String name, String phone, String address, Date date_created, boolean enabled, String role, boolean status) {
+    public User(String email, String password, String name, String phone, String address, String bio, String profile_photo, 
+                Integer experience_year, String preferred_region, Date date_created, boolean enabled, String role, boolean status) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.phone = phone;
         this.address = address;
+        this.bio = bio;
+        this.profile_photo = profile_photo;
+        this.experience_year = experience_year;
+        this.preferred_region = preferred_region;
         this.date_created = date_created;
         this.enabled = enabled;
         this.role = role;
@@ -89,11 +98,43 @@ public class User {
         this.address = address;
     }
 
-    public Date getDate_created() {
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getProfilePhoto() {
+        return profile_photo;
+    }
+
+    public void setProfilePhoto(String profile_photo) {
+        this.profile_photo = profile_photo;
+    }
+
+    public Integer getExperienceYear() {
+        return experience_year;
+    }
+
+    public void setExperienceYear(Integer experience_year) {
+        this.experience_year = experience_year;
+    }
+
+    public String getPreferredRegion() {
+        return preferred_region;
+    }
+
+    public void setPreferredRegion(String preferred_region) {
+        this.preferred_region = preferred_region;
+    }
+
+    public Date getDateCreated() {
         return date_created;
     }
 
-    public void setDate_created(Date date_created) {
+    public void setDateCreated(Date date_created) {
         this.date_created = date_created;
     }
 
