@@ -10,6 +10,8 @@ public class Service {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long userId;
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String services; // comma-separated string e.g., "Cleaning,Laundry"
 
@@ -28,6 +30,9 @@ public class Service {
     // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public Long getUserId() { return userId; }
+    public void setuserId(Long userId) { this.userId = userId; }
 
     public String getServices() { return services; }
     public void setServices(String services) { this.services = services; }

@@ -18,8 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.login.model.User;
 import com.example.login.repository.UserRepository;
 
-import jakarta.persistence.criteria.CriteriaBuilder.In;
-
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -32,9 +30,9 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping("/get-user/{email}")
-    public ResponseEntity<?> getUser(@PathVariable String email) {
-        Optional<User> userOptional = userRepository.findByEmail(email);
+    @GetMapping("/get-user/{userId}")
+    public ResponseEntity<?> getUser(@PathVariable Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();

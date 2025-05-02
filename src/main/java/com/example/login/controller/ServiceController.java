@@ -26,6 +26,11 @@ public class ServiceController {
         return repository.findAll();
     }
 
+    @GetMapping("/get-service/{userId}")
+    public List<Service> getServiceByUserId(@PathVariable Long userId) {
+        return repository.findByUserId(userId);
+    }
+
     @PostMapping("/add-service")
     public ResponseEntity<Service> addService(@RequestBody Service record) {
         Service saved = repository.save(record);
