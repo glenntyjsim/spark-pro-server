@@ -63,7 +63,11 @@ public class FavouriteController {
             cleanerInfo.put("favouriteId", fav.getId());
             cleanerInfo.put("cleanerId", cleaner.getId());
             cleanerInfo.put("name", cleaner.getName());
-            cleanerInfo.put("email", cleaner.getEmail());   
+            cleanerInfo.put("email", cleaner.getEmail());  
+            cleanerInfo.put("bio", cleaner.getBio());
+            cleanerInfo.put("profilePhoto", cleaner.getProfilePhoto());
+            cleanerInfo.put("preferredRegion", cleaner.getPreferredRegion());
+            cleanerInfo.put("experienceYears", cleaner.getExperienceYear());
             cleanerInfo.put("dateCreated", fav.getDateCreated());
             result.add(cleanerInfo);
         }
