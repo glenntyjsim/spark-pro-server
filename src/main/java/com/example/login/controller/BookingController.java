@@ -59,20 +59,19 @@ public class BookingController {
         List<Map<String, Object>> response = bookings.stream().map(booking -> {
             Service service = booking.getService(); // Assuming Booking has a Service object
 
-            Map<String, Object> bookingDetails = Map.of(
-                "bookingId", booking.getBookingId(),
-                "name", booking.getName(),
-                "email", booking.getEmail(),
-                "phone", booking.getPhone(),
-                "address", booking.getAddress(),
-                "note", booking.getNote(),
-                "duration", booking.getDuration(),
-                "status", booking.getStatus(),
-                "serviceType", service.getServices(),
-                "serviceDate", service.getDate(),
-                "timeFrom", service.getTimeFrom(),
-                "timeTo", service.getTimeTo()
-            );
+            Map<String, Object> bookingDetails = new HashMap<>();
+            bookingDetails.put("bookingId", booking.getBookingId());
+            bookingDetails.put("name", booking.getName());
+            bookingDetails.put("email", booking.getEmail());
+            bookingDetails.put("phone", booking.getPhone());
+            bookingDetails.put("address", booking.getAddress());
+            bookingDetails.put("note", booking.getNote());
+            bookingDetails.put("duration", booking.getDuration());
+            bookingDetails.put("status", booking.getStatus());
+            bookingDetails.put("serviceType", service.getServices());
+            bookingDetails.put("serviceDate", service.getDate());
+            bookingDetails.put("timeFrom", service.getTimeFrom());
+            bookingDetails.put("timeTo", service.getTimeTo());
             return bookingDetails;
         }).collect(Collectors.toList());
 
