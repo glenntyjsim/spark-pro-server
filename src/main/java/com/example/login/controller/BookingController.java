@@ -32,26 +32,22 @@ public class BookingController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createBooking(@RequestBody Booking booking) {
-        // Fetch and set managed User
         User user = userRepository.findById(booking.getUser().getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         booking.setUser(user);
 
-        // Fetch and set managed Service
+        User cleaner = userRepository.findById(booking.getCleaner().getId())
+                .orElseThrow(() -> new RuntimeException("Cleaner not found"));
+        booking.setCleaner(cleaner);
+
         Service service = serviceRepository.findById(booking.getService().getId())
                 .orElseThrow(() -> new RuntimeException("Service not found"));
         booking.setService(service);
 
-        // Save booking
         Booking saved = bookingRepository.save(booking);
         return ResponseEntity.ok(saved);
     }
 
-
-    @GetMapping("/pending")
-    public List<Booking> getPendingByCleaner(@RequestParam("cleanerId") Long cleanerId) {
-        return bookingRepository.findByUserIdAndStatus(cleanerId, "pending");
-    }
 
     @PutMapping("/status")
     public ResponseEntity<?> updateStatus(@RequestBody Map<String, Object> body) {
@@ -69,42 +65,18 @@ public class BookingController {
         }
     }
 
-<<<<<<< HEAD
-    @GetMapping("/history/cleaner")
-    public List<Booking> getHistoryByCleaner(@RequestParam("cleanerId") Long cleanerId) {
-        return bookingRepository.findByUserId(cleanerId);
-=======
-    @GetMapping("/get-pending-bookings/{cleanerId}")
-    public ResponseEntity<List<Map<String, Object>>> getPendingBookingsByCleanerId(@PathVariable Long cleanerId) {
-        // Retrieve all bookings with status 'pending' for the given cleanerId
-        List<Booking> bookings = bookingRepository.findByCleanerIdAndStatus(cleanerId, "pending");
-
-        // Map bookings to a response containing booking and service details
-        List<Map<String, Object>> response = bookings.stream().map(booking -> {
-            Service service = booking.getService(); // Assuming Booking has a Service object
-
-            Map<String, Object> bookingDetails = new HashMap<>();
-            bookingDetails.put("bookingId", booking.getBookingId());
-            bookingDetails.put("name", booking.getName());
-            bookingDetails.put("email", booking.getEmail());
-            bookingDetails.put("phone", booking.getPhone());
-            bookingDetails.put("address", booking.getAddress());
-            bookingDetails.put("note", booking.getNote());
-            bookingDetails.put("duration", booking.getDuration());
-            bookingDetails.put("status", booking.getStatus());
-            bookingDetails.put("serviceType", service.getServices());
-            bookingDetails.put("serviceDate", service.getDate());
-            bookingDetails.put("timeFrom", service.getTimeFrom());
-            bookingDetails.put("timeTo", service.getTimeTo());
-            return bookingDetails;
-        }).collect(Collectors.toList());
-
-        return ResponseEntity.ok(response);
->>>>>>> 5032af6a2ab6dc5ec51f17dd51f22a260aa1e79a
+    @GetMapping("/pending")
+    public List<Booking> getPendingByCleaner(@RequestParam("cleanerId") Long cleanerId) {
+        return bookingRepository.findByCleanerIdAndStatus(cleanerId, "pending");
     }
 
     @GetMapping("/history/user")
-    public List<Booking> getHistoryByUser(@RequestParam Long userId) {
+    public List<Booking> getHistoryByUser(@RequestParam("userId") Long userId) {
         return bookingRepository.findByUserId(userId);
+    }
+
+    @GetMapping("/history/cleaner")
+    public List<Booking> getHistoryByCleaner(@RequestParam("cleanerId") Long cleanerId) {
+        return bookingRepository.findByCleanerId(cleanerId);
     }
 }

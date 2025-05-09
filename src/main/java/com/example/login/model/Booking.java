@@ -16,6 +16,10 @@ public class Booking {
     private User user;
 
     @ManyToOne
+    @JoinColumn(name= "cleaner_id", nullable = false)
+    private User cleaner;
+
+    @ManyToOne
     @JoinColumn(name = "service_id", nullable = false)
     private Service service;
 
@@ -36,6 +40,9 @@ public class Booking {
 
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
+
+    public User getCleaner() { return cleaner; }
+    public void setCleaner(User cleaner) { this.cleaner = cleaner; }
 
     public Service getService() { return service; }
     public void setService(Service service) { this.service = service; }
