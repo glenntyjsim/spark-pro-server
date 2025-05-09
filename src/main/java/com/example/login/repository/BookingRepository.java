@@ -1,11 +1,11 @@
 package com.example.login.repository;
 
 import com.example.login.model.Booking;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    // Add the method to find bookings by cleanerId and status
-    List<Booking> findByCleanerIdAndStatus(Long cleanerId, String status);
+    List<Booking> findByUserIdAndStatus(Long userId, String status);
+    List<Booking> findByUserId(Long userId);
+    List<Booking> findByEmail(String email);
 }
