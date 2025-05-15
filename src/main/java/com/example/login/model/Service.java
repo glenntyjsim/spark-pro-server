@@ -27,6 +27,8 @@ public class Service {
     @Column(nullable = false)
     private double price;
 
+    private String status = "pending";
+
     // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -48,4 +50,7 @@ public class Service {
 
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }

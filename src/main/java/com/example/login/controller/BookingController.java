@@ -43,6 +43,10 @@ public class BookingController {
         Service service = serviceRepository.findById(booking.getService().getId())
                 .orElseThrow(() -> new RuntimeException("Service not found"));
         booking.setService(service);
+        
+        service.setStatus("booked");
+        serviceRepository.save(service);
+        booking.setService(service);
 
         Booking saved = bookingRepository.save(booking);
         return ResponseEntity.ok(saved);

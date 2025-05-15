@@ -47,6 +47,18 @@ public class ServiceController {
         return ResponseEntity.ok(repository.save(record));
     }
 
+    @PutMapping("/update-status/{id}")
+    public ResponseEntity<?> updateServiceStatus(@PathVariable Long id, @RequestParam String status) {
+        Optional<Service> serviceOptional = repository.findById(id);
+        if (serviceOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Service service = serviceOptional.get();
+        service.setStatus(status);
+        repository.save(service);
+        return ResponseEntity.ok("Service status updated to: " + status);
+    }
+
     @DeleteMapping("/remove-service/{id}")
     public ResponseEntity<Void> deleteService(@PathVariable Long id) {
         if (!repository.existsById(id)) {
