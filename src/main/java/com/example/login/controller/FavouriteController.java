@@ -75,6 +75,34 @@ public class FavouriteController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/get-favourite-cleaner")
+    public ResponseEntity<?> getFavouriteUsers(@RequestParam Long cleanerId) {
+        Optional<User> optionalCleaner = userRepo.findById(cleanerId);
+        if (optionalCleaner.isEmpty()) {
+            return ResponseEntity.badRequest().body("Invalid cleaner ID.");
+        }
+
+        List<Favourite> favourites = favouriteRepo.findByCleanerId(cleanerId);
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for (Favourite fav : favourites) {
+            User user = fav.getUser();
+            Map<String, Object> userInfo = new HashMap<>();
+            userInfo.put("favouriteId", fav.getId());
+            userInfo.put("userId", user.getId());
+            userInfo.put("name", user.getName());
+            userInfo.put("email", user.getEmail());
+            userInfo.put("bio", user.getBio());
+            userInfo.put("profilePhoto", user.getProfilePhoto());
+            userInfo.put("preferredRegion", user.getPreferredRegion());
+            userInfo.put("experienceYears", user.getExperienceYear());
+            userInfo.put("dateCreated", fav.getDateCreated());
+            result.add(userInfo);
+        }
+
+    return ResponseEntity.ok(result);
+}
+
     @DeleteMapping("/remove-favourite")
     public ResponseEntity<String> removeFromFavourites(@RequestParam Long favouriteId) {
         if (!favouriteRepo.existsById(favouriteId)) {

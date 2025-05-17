@@ -26,6 +26,16 @@ public class NotificationController {
     @Autowired
     private ServiceRepository serviceRepository;
 
+    @GetMapping("/get-notifications")
+    public ResponseEntity<?> getAllNotifications() {
+        try {
+            List<Notification> notifications = notificationRepository.findAll();
+            return ResponseEntity.ok(notifications);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error retrieving all notifications: " + e.getMessage());
+        }
+    }
+
     @PostMapping("/create-notification")
     public ResponseEntity<?> create(@RequestParam Long userId,
                                     @RequestParam Long cleanerId,
